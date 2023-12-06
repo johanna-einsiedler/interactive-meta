@@ -1,0 +1,4 @@
+{"Additional Medication in the Control Group":["No","Aspirin"],
+                  "Intensity": "High-Intesity OA",
+                  "Additional Medication in the Treatment Group":"No",
+                  "Year":[1982,1981]}
