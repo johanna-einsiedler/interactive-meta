@@ -1,0 +1,233 @@
+help_text <- function(...) {
+  file <- help(...)
+  path <- dirname(file)
+  dirpath <- dirname(path)
+  pkgname <- basename(dirpath)
+  RdDB <- file.path(path, pkgname)
+  rd <- tools:::fetchRdDB(RdDB, basename(file))
+  capture.output(tools::Rd2txt(rd, out="", options=list(underline_titles=FALSE)))
+}
+
+
+extract_metadata <- function(dataset){
+  data <- eval(as.symbol(dataset))
+  metadata <- help_text(dataset)
+  # find index where format starts
+  format_index <- which('Format:' == metadata)
+  details_index <- which('Details:'==metadata)
+  rows <- (details_index-format_index)/2
+  variables <- c()
+  for (i in 1:rows){
+    
+    variable_info<- metadata[format_index+3+i]
+    #print(variable_info)
+    # extract id
+    pattern <- "\\*([^\\*]+)\\*"
+    id <- regexpr(pattern, variable_info)
+    id <- regmatches(variable_info, id)
+    id <- gsub("\\*", "", id)
+    # if no match was found skip
+    if(length(id)==0){
+      next
+    }
+    # extract type
+    pattern <- "‘(.*?)’"
+    type <- regexpr(pattern, variable_info)
+    type <- regmatches(variable_info, type)
+    type <- gsub("‘", "", type)
+    type <- gsub("’", "", type)
+    
+    
+    # extract description
+    second_part <- str_split(variable_info,'’')[[1]][[2]]
+    description <- trimws(second_part)
+    
+
+    # extract column values
+    values <- try(paste0(unlist(unique(data[id])),collapse=','))
+    if (inherits(values, "try-error")) {
+      message(paste0("Failure for ", dataset,' variable', id))
+      next  # Skip to the next iteration
+    } 
+  
+  
+    if (id %in% c('tval','ai','n1i','ci','n2i','yi','vi')){
+      display <- 'true'
+    } else {display <- 'false'}
+    
+    
+    variable <- toJSON(list(id = id,  description = description,display_name='', type=type,values= values,display_values='',display=display))
+    variables <- c(variables,variable)
+
+
+  }
+  variables <- paste0('[',paste(variables,collapse=','),']')
+return(variables)
+}
+  
+
+
+list_of_studies <- help_text(package="metadat")
+list_of_studies <- 
+  "dat.aloe2013	Studies on the Association Between Supervision Quality and Various Outcomes in Social, Mental Health, and Child Welfare Workers
+  dat.anand1999	Studies on the Effectiveness of Oral Anticoagulants in Patients with Coronary Artery Disease
+  dat.assink2016	Studies on the Association between Recidivism and Mental Health
+  dat.axfors2021	Mortality Outcomes with Hydroxychloroquine and Chloroquine in COVID-19 from an International Collaborative Meta-Analysis of Randomized Trials
+  dat.bakdash2021	Dataset on Situation Awareness and Task Performance Associations
+  dat.baker2009	Studies on Pharmacologic Treatments for Chronic Obstructive Pulmonary Disease
+  dat.bangertdrowns2004	Studies on the Effectiveness of Writing-to-Learn Interventions
+  dat.baskerville2012	Studies on the Effectiveness of Practice Facilitation Interventions
+  dat.bcg	Studies on the Effectiveness of the BCG Vaccine Against Tuberculosis
+  dat.begg1989	Studies on Bone-Marrow Transplantation versus Chemotherapy for the Treatment of Leukemia
+  dat.berkey1998	Studies on Treatments for Periodontal Disease
+  dat.besson2016	Dataset on How Maternal Diet Impacts Copying Styles in Rodents
+  dat.bonett2010	Studies on the Reliability of the CES-D Scale
+  dat.bornmann2007	Studies on Gender Differences in Grant and Fellowship Awards
+  dat.bourassa1996	Studies on the Association between Handedness and Eye-Dominance
+  dat.cannon2006	Studies on the Effectiveness of Intensive Versus Moderate Statin Therapy for Preventing Coronary Death or Myocardial Infarction
+  dat.cohen1981	Studies on the Relationship between Course Instructor Ratings and Student Achievement
+  dat.colditz1994	Studies on the Effectiveness of the BCG Vaccine Against Tuberculosis
+  dat.collins1985a	Studies on the Treatment of Upper Gastrointestinal Bleeding by a Histamine H2 Antagonist
+  dat.collins1985b	Studies on the Effects of Diuretics in Pregnancy
+  dat.craft2003	Studies on the Relationship between the Competitive State Anxiety Inventory-2 and Sport Performance
+  dat.crede2010	Studies on the Relationship between Class Attendance and Grades in College Students
+  dat.curtis1998	Studies on the Effects of Elevated CO2 Levels on Woody Plant Mass
+  dat.dagostino1998	Studies on the Effectiveness of Antihistamines in Reducing Symptoms of the Common Cold
+  dat.damico2009	Studies on Topical plus Systemic Antibiotics to Prevent Respiratory Tract Infections
+  dat.debruin2009	Studies on Standard Care Quality and HAART-Adherence
+  dat.dogliotti2014	Studies on Antithrombotic Treatments to Prevent Strokes
+  dat.dong2013	Studies on Safety of Inhaled Medications for Chronic Obstructive Pulmonary Disease
+  dat.dorn2007	Studies on Complementary and Alternative Medicine for Irritable Bowel Syndrome
+  dat.egger2001	Studies on the Effectiveness of Intravenous Magnesium in Acute Myocardial Infarction
+  dat.fine1993	Studies on Radiation Therapy with or without Adjuvant Chemotherapy in Patients with Malignant Gliomas
+  dat.franchini2012	Studies on Dopamine Agonists to Reduce 'Off-Time' in Patients with Advanced Parkinson Disease
+  dat.frank2008	Studies on the Association Between the CASP8 -652 6N del Promoter Polymorphism and Breast Cancer Risk
+  dat.gibson2002	Studies on the Effectiveness of Self-Management Education and Regular Medical Review for Adults with Asthma
+  dat.graves2010	Studies on the Effectiveness of Injected Cholera Vaccines
+  dat.gurusamy2011	Studies on Interventions to Reduce Mortality after Liver Transplantation
+  dat.hackshaw1998	Studies on the Risk of Lung Cancer in Women Exposed to Environmental Tobacco Smoke
+  dat.hahn2001	Studies on the Effectiveness of Different Rehydration Solutions for the Prevention of Unscheduled Intravenous Infusion in Children with Diarrhoea
+  dat.hannum2020	Studies Comparing Objective and Subjective Olfactory Loss in COVID-19 Patients
+  dat.hart1999	Studies on the Effectiveness of Warfarin for Preventing Strokes
+  dat.hartmannboyce2018	Studies on the Effectiveness of Nicotine Replacement Therapy for Smoking Cessation
+  dat.hasselblad1998	Studies on the Effectiveness of Counseling for Smoking Cessation
+  dat.hine1989	Studies on Prophylactic Use of Lidocaine After a Heart Attack
+  dat.ishak2007	Studies on Deep-Brain Stimulation in Patients with Parkinson's disease
+dat.kalaian1996	Studies on the Effectiveness of Coaching for the SAT
+dat.kearon1998	Studies on the Accuracy of Venous Ultrasonography for the Diagnosis of Deep Venous Thrombosis
+dat.knapp2017	Studies on Differences in Planning Performance in Schizophrenia Patients versus Healthy Controls
+dat.konstantopoulos2011	Studies on the Effects of Modified School Calendars on Student Achievement
+dat.landenberger2005	Studies on the Effectiveness of CBT for Reducing Recidivism
+dat.laopaiboon2015	Studies on the Effectiveness of Azithromycin for Treating Lower Respiratory Tract Infections
+dat.lau1992	Studies on Intravenous Streptokinase for Acute Myocardial Infarction
+dat.lee2004	Studies on Acupoint P6 Stimulation for Preventing Nausea
+dat.lehmann2018	The Effect of Red on Perceived Attractiveness
+dat.li2007	Studies on the Effectiveness of Intravenous Magnesium in Acute Myocardial Infarction
+dat.lim2014	Studies on the Association Between Maternal Size, Offspring Size, and Number of Offsprings
+dat.linde2005	Studies on the Effectiveness of St. John's Wort for Treating Depression
+  dat.linde2015	Studies on Classes of Antidepressants for the Primary Care Setting
+  dat.linde2016	Studies on Antidepressants for the Primary Care Setting
+  dat.lopez2019	Studies on the Effectiveness of CBT for Depression
+  dat.maire2019	Studies on Temporal Trends in Fish Community Structures in French Rivers
+  dat.mccurdy2020	Studies on the Generation Effect
+  dat.mcdaniel1994	Studies on the Validity of Employment Interviews
+  dat.michael2013	The Non-Persuasive Power of a Brain Image
+  dat.molloy2014	Studies on the Relationship between Conscientiousness and Medication Adherence
+  dat.moura2021	Studies on Assortative Mating
+  dat.nakagawa2007	Assessing the Function of House Sparrows' Bib Size Using a Flexible Meta-Analysis Method
+dat.nielweise2007	Studies on Anti-Infective-Treated Central Venous Catheters for Prevention of Catheter-Related Bloodstream Infections
+dat.nielweise2008	Studies on Anti-Infective-Treated Central Venous Catheters for Prevention of Catheter-Related Bloodstream Infections
+dat.normand1999	Studies on the Length of Hospital Stay of Stroke Patients
+dat.obrien2003	Studies on the Relationship Between BMI and Risk of Preeclampsia
+dat.pagliaro1992	Studies on the Effectiveness of Nonsurgical Treatments in Cirrhosis
+dat.pignon2000	Studies on the Effectiveness of Locoregional Treatment plus Chemotherapy for Head and Neck Squamous-Cell Carcinoma
+dat.pritz1997	Studies on the Effectiveness of Hyperdynamic Therapy for Treating Cerebral Vasospasm
+dat.raudenbush1985	Studies on Assessing the Effects of Teacher Expectations on Pupil IQ
+dat.riley2003	Studies on MYC-N as a Prognostic Marker for Neuroblastoma
+dat.senn2013	Studies on the Effectiveness of Glucose-Lowering Agents
+dat.stowe2010	Studies on Adjuvant Treatments to Levodopa Therapy for Parkinson disease
+dat.tannersmith2016	Studies on the Relationship between School Motivation and Criminal Behavior
+dat.vanhowe1999	Studies on the Association between Circumcision and HIV Infection
+dat.viechtbauer2021	Studies to Illustrate Model Checking Methods
+dat.white2020	Studies on the Relationship between Sexual Signal Expression and Individual Quality
+dat.woods2010	Studies on Treatments for Chronic Obstructive Pulmonary Disease
+dat.yusuf1985	Studies of Beta Blockers During and After Myocardial Infarction)"
+
+# split in individual studies
+list_of_studies <- str_split(list_of_studies,'\n')
+split_t <- function(x){
+  return(str_split(x,'\t'))
+  
+}
+
+list_of_studies <- lapply(list_of_studies, split_t)
+
+df_studies <- do.call(rbind, lapply(list_of_studies, data.frame, stringsAsFactors = FALSE))
+names(df_studies) <- df_studies[1,]
+df_studies <- df_studies[2,]
+
+# run extraction for all studies
+for (study in names(df_studies)){
+  study <- trimws(study)
+  print(study)
+  output <- extract_metadata(study)
+  write_file(output,paste0('/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/study_descriptions/',study,'.txt'))
+
+}
+
+
+#################################################
+
+
+
+
+######################## manual test
+test_st <- paste0(
+  
+'[{
+  "id": "asp.t",
+  "description": "concomitant use of aspirin in the treatment group (0 = no, 1 = yes)",
+  "display_name":   "Additional Medication in the Treatment Group", 
+  "type": "numeric",
+  "values": [0,1],
+  "display_values": ["No","Aspirin"],
+  "display": "true"
+  },
+{
+"id": "intensity",
+"description": "intensity of anticoagulation (low, medium, or high",
+"display_name": "Intensity", 
+"type": "character",
+"values": ["high","moderate","low"],
+"display_values": ["High-Intesity OA","Moderate-Intensity OA","Low Intensity OA"],
+"display": "true"
+},
+
+{
+  "id": "asp.c",
+  "description": "concomitant use of aspirin in the control group (0 = no, 1 = yes)",
+  "display_name": "Additional Medication in the Control Group", 
+  "type": "numeric",
+  "values": [0,1],
+  "display_values": ["No","Aspirin"],
+  "display": "true"
+},
+{
+  "id": "study",
+  "description": "author(s) or trial name",
+  "display_name": "Study", 
+  "type": "character",
+  "values":',paste0('["',paste(sort(unique(dat$study)),collapse='","'),'"]'),',
+  "display_values": "",
+  "display": "true"
+}]'
+) %>%  str_replace_all("\\\\", "") %>%
+  str_replace_all("\n", "")
+
+write_file(test_st,'/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/test_string.txt')
+
+
+
+  
+  
+  
