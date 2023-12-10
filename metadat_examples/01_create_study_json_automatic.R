@@ -1,3 +1,6 @@
+library(stringr)
+library(brio)
+
 help_text <- function(...) {
   file <- help(...)
   path <- dirname(file)
@@ -44,7 +47,7 @@ extract_metadata <- function(dataset){
     
 
     # extract column values
-    values <- try(paste0(unlist(unique(data[id])),collapse=','))
+    values <- try(paste0(unlist(unique(data[id])),collapse='","'))
     if (inherits(values, "try-error")) {
       message(paste0("Failure for ", dataset,' variable', id))
       next  # Skip to the next iteration
@@ -67,7 +70,6 @@ return(variables)
   
 
 
-list_of_studies <- help_text(package="metadat")
 list_of_studies <- 
   "dat.aloe2013	Studies on the Association Between Supervision Quality and Various Outcomes in Social, Mental Health, and Child Welfare Workers
   dat.anand1999	Studies on the Effectiveness of Oral Anticoagulants in Patients with Coronary Artery Disease
@@ -227,7 +229,49 @@ test_st <- paste0(
 write_file(test_st,'/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/test_string.txt')
 
 
+#################### test input string
+test_st <- paste0(
+  
+  '[{
+  "id": "asp.t",
+  "description": "concomitant use of aspirin in the treatment group (0 = no, 1 = yes)",
+  "display_name":   "Additional Medication in the Treatment Group", 
+  "type": "numeric",
+  "values": [0,1],
+  "display_values": ["No","Aspirin"],
+  "display": "true"
+  },
+{
+"id": "intensity",
+"description": "intensity of anticoagulation (low, medium, or high",
+"display_name": "Intensity", 
+"type": "character",
+"values": ["high"],
+"display_values": ["High-Intesity OA",],
+"display": "true"
+},
 
+{
+  "id": "asp.c",
+  "description": "concomitant use of aspirin in the control group (0 = no, 1 = yes)",
+  "display_name": "Additional Medication in the Control Group", 
+  "type": "numeric",
+  "values": [0,1],
+  "display_values": ["No","Aspirin"],
+  "display": "true"
+},
+{
+  "id": "study",
+  "description": "author(s) or trial name",
+  "display_name": "Study", 
+  "type": "character",
+  "values": [160,1961,1964,1969],
+  "display_values": "",
+  "display": "true"
+}]'
+) %>%  str_replace_all("\\\\", "") %>%
+  str_replace_all("\n", "")
   
   
-  
+  write_file(test_st,'/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/test_string_input.txt')
+
