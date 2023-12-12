@@ -59,7 +59,12 @@ extract_metadata <- function(study){
     } else {display <- 'false'}
     
     
-    variable <- toJSON(list(id = id,  description = description,display_name='', type=type,values= values,display_values='',display=display))
+    variable <- toJSON(list(id = id,  
+                            description = description,
+                            display_name=[], 
+                            type=type,values= values,
+                            display_values=[],
+                            display=display))
     variables <- c(variables,variable)
 
 
