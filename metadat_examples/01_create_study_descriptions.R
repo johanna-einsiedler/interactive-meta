@@ -11,63 +11,79 @@ help_text <- function(...) {
   capture.output(tools::Rd2txt(rd, out="", options=list(underline_titles=FALSE)))
 }
 
-
-extract_metadata <- function(dataset){
-  data <- eval(as.symbol(dataset))
-  metadata <- help_text(dataset)
-  # find index where format starts
+extract_study_info <- function(study){
+  data <- eval(as.symbol(study))
+  metadata <- help_text(study)
+  
+  # TITLE
+  # get empty indeces
+  empty_indeces <- which(metadata=='')
+  # extract everything before that as title
+  title <- paste0(metadata[1:empty_indeces[1]-1],collapse=' ')
+  
+  # get indices
+  description_index <- which('Description:' == metadata)
+  usage_index <- which('Usage:' == metadata)
   format_index <- which('Format:' == metadata)
-  details_index <- which('Details:'==metadata)
-  rows <- (details_index-format_index)/2
-  variables <- c()
-  for (i in 1:rows){
-    
-    variable_info<- metadata[format_index+3+i]
-    #print(variable_info)
-    # extract id
-    pattern <- "\\*([^\\*]+)\\*"
-    id <- regexpr(pattern, variable_info)
-    id <- regmatches(variable_info, id)
-    id <- gsub("\\*", "", id)
-    # if no match was found skip
-    if(length(id)==0){
-      next
-    }
-    # extract type
-    pattern <- "‘(.*?)’"
-    type <- regexpr(pattern, variable_info)
-    type <- regmatches(variable_info, type)
-    type <- gsub("‘", "", type)
-    type <- gsub("’", "", type)
-    
-    
-    # extract description
-    second_part <- str_split(variable_info,'’')[[1]][[2]]
-    description <- trimws(second_part)
-    
-
-    # extract column values
-    values <- try(paste0(unlist(unique(data[id])),collapse='","'))
-    if (inherits(values, "try-error")) {
-      message(paste0("Failure for ", dataset,' variable', id))
-      next  # Skip to the next iteration
-    } 
+  details_index <- which('Details:' == metadata)
+  concepts_index <- which('Concepts:' == metadata)
+  note_index <- which('Note:' == metadata)
+  author_index <- which('Author(s):' == metadata)
+  source_index <- which('Source:' == metadata)
+  refs_index <- which('References:' == metadata)
+  ex_index <- which('Examples:' == metadata)
   
   
-    if (id %in% c('tval','ai','n1i','ci','n2i','yi','vi')){
-      display <- 'true'
-    } else {display <- 'false'}
-    
-    
-    variable <- toJSON(list(id = id,  description = description,display_name='', type=type,values= values,display_values='',display=display))
-    variables <- c(variables,variable)
-
-
+  # DESCRIPTION
+  description <- metadata[(description_index+2):(usage_index-2)]
+  description <- paste(trimws(description),collapse='')
+  
+  # DETAILS
+  details <- metadata[(details_index+2):(concepts_index-2)]
+  details <- paste(trimws(details),collapse='')
+  
+  # CONCEPTS
+  if(length(note_index)==0){
+    concepts <-   concepts <- metadata[(concepts_index+2):(source_index-2)]
+  } else{
+  concepts <- metadata[(concepts_index+2):(note_index-2)]
   }
-  variables <- paste0('[',paste(variables,collapse=','),']')
-return(variables)
-}
+  concepts <- paste(trimws(concepts),collapse='')
+  concepts <- str_split(concepts,',')[[1]]
   
+  # NOTE
+  if(length(note_index)!=0){
+  note <- metadata[(note_index+2):(author_index-2)]
+  note <- paste(trimws(note),collapse='')
+  }
+  
+  # SOURCE + REFS
+  if (length(refs_index)==0){
+    source <- metadata[(source_index+2):(ex_index-2)]
+    refs <- NaN}
+  else {
+  source <- metadata[(source_index+2):(refs_index-2)]
+  refs <- metadata[(refs_index + 2): (ex_index-2)]
+  refs <- paste(trimws(refs),collapse='')
+  }
+  source <- paste(trimws(source),collapse='')
+  
+ # create return data
+  variable <- toJSON(list(id = study,  
+                          title = title,
+                          display_title = '',
+                          description = description,
+                          details = details,
+                          concepts = concepts,
+                          note =note,
+                          source =source,
+                          references = refs))
+return(variable)
+
+  
+}
+
+
 
 
 list_of_studies <- 
@@ -172,106 +188,8 @@ df_studies <- df_studies[2,]
 for (study in names(df_studies)){
   study <- trimws(study)
   print(study)
-  output <- extract_metadata(study)
+  output <- extract_study_info(study)
   write_file(output,paste0('/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/study_descriptions/',study,'.txt'))
-
+  
 }
-
-
-#################################################
-
-
-
-
-######################## manual test
-test_st <- paste0(
-  
-'[{
-  "id": "asp.t",
-  "description": "concomitant use of aspirin in the treatment group (0 = no, 1 = yes)",
-  "display_name":   "Additional Medication in the Treatment Group", 
-  "type": "numeric",
-  "values": [0,1],
-  "display_values": ["No","Aspirin"],
-  "display": "true"
-  },
-{
-"id": "intensity",
-"description": "intensity of anticoagulation (low, medium, or high",
-"display_name": "Intensity", 
-"type": "character",
-"values": ["high","moderate","low"],
-"display_values": ["High-Intesity OA","Moderate-Intensity OA","Low Intensity OA"],
-"display": "true"
-},
-
-{
-  "id": "asp.c",
-  "description": "concomitant use of aspirin in the control group (0 = no, 1 = yes)",
-  "display_name": "Additional Medication in the Control Group", 
-  "type": "numeric",
-  "values": [0,1],
-  "display_values": ["No","Aspirin"],
-  "display": "true"
-},
-{
-  "id": "study",
-  "description": "author(s) or trial name",
-  "display_name": "Study", 
-  "type": "character",
-  "values":',paste0('["',paste(sort(unique(dat$study)),collapse='","'),'"]'),',
-  "display_values": "",
-  "display": "true"
-}]'
-) %>%  str_replace_all("\\\\", "") %>%
-  str_replace_all("\n", "")
-
-write_file(test_st,'/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/test_string.txt')
-
-
-#################### test input string
-test_st <- paste0(
-  
-  '[{
-  "id": "asp.t",
-  "description": "concomitant use of aspirin in the treatment group (0 = no, 1 = yes)",
-  "display_name":   "Additional Medication in the Treatment Group", 
-  "type": "numeric",
-  "values": [0,1],
-  "display_values": ["No","Aspirin"],
-  "display": "true"
-  },
-{
-"id": "intensity",
-"description": "intensity of anticoagulation (low, medium, or high",
-"display_name": "Intensity", 
-"type": "character",
-"values": ["high"],
-"display_values": ["High-Intesity OA",],
-"display": "true"
-},
-
-{
-  "id": "asp.c",
-  "description": "concomitant use of aspirin in the control group (0 = no, 1 = yes)",
-  "display_name": "Additional Medication in the Control Group", 
-  "type": "numeric",
-  "values": [0,1],
-  "display_values": ["No","Aspirin"],
-  "display": "true"
-},
-{
-  "id": "study",
-  "description": "author(s) or trial name",
-  "display_name": "Study", 
-  "type": "character",
-  "values": [160,1961,1964,1969],
-  "display_values": "",
-  "display": "true"
-}]'
-) %>%  str_replace_all("\\\\", "") %>%
-  str_replace_all("\n", "")
-  
-  
-  write_file(test_st,'/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/test_string_input.txt')
 

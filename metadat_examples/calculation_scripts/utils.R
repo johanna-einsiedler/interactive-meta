@@ -23,7 +23,10 @@ filter_data <- function(dataset, input){
     var_id <- input$id
     #print(var_id)
     values <- input$values
+    if (typeof(values)=='integer'){
+      values <- as.list(values)} else {
     values <- sapply(values, function(x) gsub('\"','', as.list(el(strsplit(values, ',\"')))))
+}
     # check if na values are there and replace with true NA
 
     values[values=='NA']<- NA
