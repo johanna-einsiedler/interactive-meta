@@ -28,17 +28,19 @@ check_filtering <- function(dataset,input){
 
 
 # get list of studies
-file_list <- list.files(path = '/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/study_descriptions', recursive = TRUE)
+file_list <- list.files(path = '/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/filter_descriptions', recursive = TRUE)
 file_list <- gsub('.txt','',file_list)
 
 results <- c()
-for (study in file_list){
+for (study_name in file_list){
   # load dataset
-  dataset <- eval(as.symbol(study))
+  dataset <- eval(as.symbol(study_name))
   # get input json
-  input <- read_file(paste0('/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/study_descriptions/',study,'.txt'))
+  input <- fromJSON(paste0('/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/filter_descriptions/',study_name,'.txt'))
+  input <- toJSON(input)
+  
   out <- check_filtering(dataset,input)
-  results <- rbind(results,c(study,out))
+  results <- rbind(results,c(study_name,out))
 }
 
 # print which ones failed

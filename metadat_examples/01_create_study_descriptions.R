@@ -44,7 +44,7 @@ extract_study_info <- function(study){
   
   # CONCEPTS
   if(length(note_index)==0){
-    concepts <-   concepts <- metadata[(concepts_index+2):(source_index-2)]
+    concepts <-   concepts <- metadata[(concepts_index+2):(author_index-2)]
   } else{
   concepts <- metadata[(concepts_index+2):(note_index-2)]
   }

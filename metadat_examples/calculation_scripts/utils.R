@@ -5,7 +5,7 @@ library(jsonlite)
 library(dplyr)
 
 
-
+# FUNCTION TO FILTER DATAFRAME ACCORDING TO FILTER INPUT
 filter_data <- function(dataset, input){
 
   # remove [] at beginning and end
@@ -25,23 +25,26 @@ filter_data <- function(dataset, input){
     values <- input$values
     if (typeof(values)=='integer'){
       values <- as.list(values)} else {
-    values <- sapply(values, function(x) gsub('\"','', as.list(el(strsplit(values, ',\"')))))
+    values <- as.list(strsplit(values, ',\"'))
 }
     # check if na values are there and replace with true NA
-
     values[values=='NA']<- NA
     
-   # print(values)
-    
-    dataset <- dataset %>% filter(eval(as.symbol(var_id)) %in% values)
-    #print(dim(dataset))
+    # check if we have NAs as this requires special treatment
+    if (any(is.na(values))){
+    dataset <- dataset %>% filter(eval(as.symbol(var_id)) %in% values | is.na(eval(as.symbol(var_id))))
+    } else{
+      dataset <- dataset %>% filter(eval(as.symbol(var_id)) %in% values)
+      
+    }
+
   }
   
   return(dataset)
 }
 
 
-
+# FUNCTION TO CREATE A NICE RETURN DATAFRAME
 create_return <- function(dataset,res){
 #create dataframe with study data
 # check if dataset has year variable and if so how its written
@@ -66,7 +69,26 @@ meta <- data.frame(study_names='Random Effects Model',
 out <- rbind(out,meta)
 out <- out %>% mutate(across(where(is.numeric), \(x) round(x,digits=2)))
 
-out_json <- toJSON(out)
+out_json <- toJSON(out,pretty=TRUE)
 
-return(out_json)
+
+# gather study information
+meta_info <- c(measure = unname(res$measure[[1]]),
+     call = paste0(trimws(deparse(res$call)),collapse=''),
+     method =res$method[[1]],
+     ll = res$fit.stats['ll',]['REML'],
+     dev = res$fit.stats['dev',]['REML'],
+     AIC = res$fit.stats['AIC',]['REML'],
+     BIC = res$fit.stats['BIC',]['REML'],
+     AICc = res$fit.stats['AICc',]['REML'],
+     pval = res$pval,
+     zval = res$zval,
+     n=res$k,
+     QE=res$QE)
+
+  meta_info_json <- toJSON(meta_info,pretty=TRUE)    
+     
+  return_list <- list(out_json, meta_info_json)     
+
+return(return_list)
 }
