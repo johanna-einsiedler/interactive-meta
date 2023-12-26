@@ -8,7 +8,11 @@ source('utils.R')
 
 # dat.aloe2013
 f.aloe2013 <- function(dataset){
-  res <-rma(yi, vi, data=dataset)
+  
+  ### compute the partial correlation coefficients and corresponding sampling variances
+  dat <- escalc(measure="PCOR", ti=tval, ni=n, mi=preds, data=dataset)
+  
+  res <-rma(yi, vi, data=dat)
   return(res)
 }
 

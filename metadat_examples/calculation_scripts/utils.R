@@ -3,6 +3,7 @@ library(metafor)
 library(hash)
 library(jsonlite)
 library(dplyr)
+library(stringr)
 
 
 # FUNCTION TO FILTER DATAFRAME ACCORDING TO FILTER INPUT
@@ -52,7 +53,7 @@ if('year' %in% names(dataset)){
   study_names <- paste0(dataset$study,', ', dataset$year)[res$not.na.yivi]
 } else if ('Year' %in% names(dataset)){
   study_names <- paste0(dataset$Study,', ', dataset$Year)[res$not.na.yivi]
-} else {study_names <- dataset[1,]}
+} else {study_names <- dataset[,1]}
 measure <- exp(res$yi)
 participants <- attr(res$yi, 'ni')
 ci_lower <- exp(res$yi -sqrt(res$vi)* qt(0.975, df = participants-1))
