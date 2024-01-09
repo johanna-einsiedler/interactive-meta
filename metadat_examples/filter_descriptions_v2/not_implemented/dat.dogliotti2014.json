@@ -1,0 +1,220 @@
+[
+  {
+    "id": [
+      "study"
+    ],
+    "description": [
+      "Study label"
+    ],
+    "display_name": [],
+    "type": [
+      "character"
+    ],
+    "values": [
+      "AFASAK-I 1989",
+      "BAATAF 1990",
+      "CAFA 1991",
+      "SPAF-I 1991",
+      "SPINAF 1992",
+      "EAFT 1993",
+      "SPAF-II 1994",
+      "AFASAK-II 1998",
+      "PATAF 1999",
+      "LASAF 1999",
+      "ACTIVE (W) 2006",
+      "JAST 2006",
+      "ACTIVE (A) 2006",
+      "Chinese/ATAFS 2006",
+      "BAFTA 2007",
+      "RE-LY 2009",
+      "ROCKET 2011",
+      "ARISTOTLE 2011",
+      "AVERROES 2011",
+      "WASPO, 2007"
+    ],
+    "display_values": [],
+    "display": [
+      "true"
+    ]
+  },
+  {
+    "id": [
+      "id"
+    ],
+    "description": [
+      "Study ID"
+    ],
+    "display_name": [],
+    "type": [
+      "numeric"
+    ],
+    "values": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20"
+    ],
+    "display_values": [],
+    "display": [
+      "false"
+    ]
+  },
+  {
+    "id": [
+      "treatment"
+    ],
+    "description": [
+      "Treatment"
+    ],
+    "display_name": [],
+    "type": [
+      "character"
+    ],
+    "values": [
+      "VKAs",
+      "Aspirin",
+      "Placebo/Control",
+      "Aspirin+Clopidogtrel",
+      "Dabigatran 110mg",
+      "Dabigatran 150mg",
+      "Rivaroxaban",
+      "Apixaban"
+    ],
+    "display_values": [],
+    "display": [
+      "true"
+    ]
+  },
+  {
+    "id": [
+      "stroke"
+    ],
+    "description": [
+      "Number of strokes"
+    ],
+    "display_name": [],
+    "type": [
+      "numeric"
+    ],
+    "values": [
+      "9",
+      "16",
+      "19",
+      "3",
+      "13",
+      "6",
+      "8",
+      "24",
+      "42",
+      "7",
+      "23",
+      "20",
+      "88",
+      "90",
+      "39",
+      "10",
+      "22",
+      "5",
+      "59",
+      "100",
+      "17",
+      "18",
+      "296",
+      "408",
+      "21",
+      "44",
+      "171",
+      "122",
+      "185",
+      "188",
+      "240",
+      "197",
+      "248",
+      "49",
+      "105",
+      "0"
+    ],
+    "display_values": [],
+    "display": [
+      "true"
+    ]
+  },
+  {
+    "id": [
+      "total"
+    ],
+    "description": [
+      "Number of individuals"
+    ],
+    "display_name": [],
+    "type": [
+      "numeric"
+    ],
+    "values": [
+      "335",
+      "336",
+      "212",
+      "208",
+      "187",
+      "191",
+      "210",
+      "552",
+      "568",
+      "260",
+      "265",
+      "225",
+      "404",
+      "378",
+      "555",
+      "545",
+      "170",
+      "169",
+      "131",
+      "319",
+      "194",
+      "91",
+      "3371",
+      "3335",
+      "426",
+      "445",
+      "3772",
+      "3782",
+      "369",
+      "488",
+      "485",
+      "6015",
+      "6076",
+      "6022",
+      "7081",
+      "7090",
+      "9120",
+      "9081",
+      "2808",
+      "2791",
+      "36",
+      "39"
+    ],
+    "display_values": [],
+    "display": [
+      "true"
+    ]
+  },
+  {"rank":
+  ["total","treatment","stroke","study","id"]}
+]
