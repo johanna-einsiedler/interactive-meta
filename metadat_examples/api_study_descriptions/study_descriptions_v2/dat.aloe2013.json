@@ -1,1 +1,31 @@
-{"id":["dat.aloe2013"],"title":["Studies on the Association Between Supervision Quality and Various Outcomes in Social, Mental Health, and Child Welfare Workers"],"display_title":[""],"description":["Results from 5 studies examining the association between variousmeasures of supervision quality and various work-related outcomesin social, mental health, and child welfare workers."],"details":["The dataset is based on studies that used regression models toexamine the association between some measure of perceived supervision quality (e.g., the quality of the relationship withone's supervisor) and some work-related outcome (e.g., jobsatisfaction) in social, mental health, and child welfare workers.The dataset was extracted from Aloe and Thompson (2013), which inturn is a subset of the studies included in the meta-analysis byMor Barak et al. (2009).The dataset can be used to illustrate the meta-analysis ofregression models, using measures such as the (semi-)partialcorrelation coefficient. For this, the t-statistic from theregression model for the association (i.e., predictor) of interestwas extracted from each regression model (‘tval’), as well as thesample size (‘n’), the number of predictors included in theregression model (‘preds’), and the coefficient of determination(i.e., R-squared value) of the regression model (‘R2’). Based onthis information, the (semi-)partial correlation coefficient canbe computed for each study, as well as its corresponding samplingvariance. These values can then be meta-analyzed using standardmethods."],"concepts":["social work"," (semi-)partial correlations"," meta-regression"],"note":["Strictly speaking, there are only 31 trials, since Breddin et al.(1980) and ATACS (1990) are multiarm trials.According to a correction, ‘dat.anand1999$ci[29]’ should be 1. Butthen ‘dat.anand1999$ci[21]’ would also have to be 1 (if these dataindeed refer to the same control group). This appearscontradictory, so this correction was not made."],"source":["Aloe, A. M., & Thompson, C. G. (2013). The synthesis of partialeffect sizes. _Journal of the Society for Social Work andResearch_, *4*(4), 390-405. https://doi.org/10.5243/jsswr.2013.24"],"references":["Mor Barak, M. E., Travis, D. J., Pyun, H., & Xie, B. (2009). Theimpact of supervision on worker outcomes: A meta-analysis. _SocialService Review_, *83*(1), 3-32. https://doi.org/10.1086/599028"]}
+{
+  "id": [
+    "dat.aloe2013"
+  ],
+  "title": [
+    "Studies on the Association Between Supervision Quality and Various Outcomes in Social, Mental Health, and Child Welfare Workers"
+  ],
+  "display_title": [
+    "What is the effect of supervision quality on work-related outcomes in social, mental health and child welfare workers?"
+  ],
+  "description": [
+    "Results from 5 studies examining the association between various measures of supervision quality and various work-related outcomes in social, mental health, and child welfare workers."
+  ],
+  "details": [
+    "The dataset is based on studies that used regression models to examine the association between some measure of perceived supervision quality (e.g., the quality of the relationship with one's supervisor) and some work-related outcome (e.g., job satisfaction) in social, mental health, and child welfare workers. The dataset was extracted from Aloe and Thompson (2013), which in turn is a subset of the studies included in the meta-analysis by Mor Barak et al. (2009). The dataset can be used to illustrate the meta-analysis of regression models, using measures such as the (semi-)partial correlation coefficient. For this, the t-statistic from the regression model for the association (i.e., predictor) of interest was extracted from each regression model (‘tval’), as well as the sample size (‘n’), the number of predictors included in the regression model (‘preds’), and the coefficient of determination (i.e., R-squared value) of the regression model (‘R2’). Based on this information, the (semi-)partial correlation coefficient can be computed for each study, as well as its corresponding sampling variance. These values can then be meta-analyzed using standard methods."
+  ],
+  "concepts": [
+    "social work",
+    " (semi-)partial correlations",
+    " meta-regression"
+  ],
+  "note": [
+    "Strictly speaking, there are only 31 trials, since Breddin et al.(1980) and ATACS (1990) are multiarm trials. According to a correction, ‘dat.anand1999$ci[29]’ should be 1. Butthen ‘dat.anand1999$ci[21]’ would also have to be 1 (if these data indeed refer to the same control group). This appears contradictory, so this correction was not made."
+  ],
+  "source": [
+    "Aloe, A. M., & Thompson, C. G. (2013). The synthesis of partial effect sizes. _Journal of the Society for Social Work and Research_, *4*(4), 390-405. https://doi.org/10.5243/jsswr.2013.24"
+  ],
+  "references": [
+    "Mor Barak, M. E., Travis, D. J., Pyun, H., & Xie, B. (2009). The impact of supervision on worker outcomes: A meta-analysis. _Social Service Review_, *83*(1), 3-32. https://doi.org/10.1086/599028"
+  ]
+}
