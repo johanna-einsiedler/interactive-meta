@@ -5,40 +5,39 @@ library(jsonlite)
 library(dplyr)
 library(stringr)
 
-
 # FUNCTION TO FILTER DATAFRAME ACCORDING TO FILTER INPUT
 filter_data <- function(dataset, input){
-
+  
   # remove [] at beginning and end
-  input <- substring(input,2,nchar(input)-1)
+  #input <- substring(input,2,nchar(input)-1)
   # split into parts
-  inputs <- strsplit(input, '},')[[1]]
-
-  for (i in (1:length(inputs))){
+  #inputs <- strsplit(input, '},')[[1]]
+  
+  for (i in (1:dim(inputs)[1])){
     # format correctly
-  if (i < length(inputs)){
-      input <- fromJSON(paste0(inputs[i],'}'))
-    } else { input <- fromJSON(paste0(inputs[i])) }
+    #if (i < length(inputs)){
+    input <- inputs[i,]
+    # } else { input <- fromJSON(paste0(inputs[i])) }
     
     # filter data
-    var_id <- input$id
+    var_id <- input$id[[1]]
     #print(var_id)
-    values <- input$values
+    values <- input$values[[1]]
     if (typeof(values)=='integer'){
       values <- as.list(values)} else {
-    values <- as.list(strsplit(values, ',\"'))
-}
+        values <- as.list(strsplit(values, ',\"'))
+      }
     # check if na values are there and replace with true NA
     values[values=='NA']<- NA
     
     # check if we have NAs as this requires special treatment
     if (any(is.na(values))){
-    dataset <- dataset %>% filter(eval(as.symbol(var_id)) %in% values | is.na(eval(as.symbol(var_id))))
+      dataset <- dataset %>% filter(eval(as.symbol(var_id)) %in% values | is.na(eval(as.symbol(var_id))))
     } else{
       dataset <- dataset %>% filter(eval(as.symbol(var_id)) %in% values)
       
     }
-
+    
   }
   
   return(dataset)
@@ -47,6 +46,8 @@ filter_data <- function(dataset, input){
 
 # FUNCTION TO CREATE A NICE RETURN DATAFRAME
 create_return <- function(dataset,res){
+  
+
 #create dataframe with study data
 # check if dataset has year variable and if so how its written
 if('year' %in% names(dataset)){
