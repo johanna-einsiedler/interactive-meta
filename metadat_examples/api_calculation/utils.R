@@ -50,10 +50,10 @@ create_return <- function(dataset,res){
 
 #create dataframe with study data
 # check if dataset has year variable and if so how its written
-if('year' %in% names(dataset)){
-  study_names <- paste0(dataset$study,', ', dataset$year)[res$not.na.yivi]
-} else if ('Year' %in% names(dataset)){
-  study_names <- paste0(dataset$Study,', ', dataset$Year)[res$not.na.yivi]
+if(('year' %in% names(dataset)) && ('study' %in% names(dataset))){
+  study_names <- paste0(dataset$study,', ', dataset$year)[res$not.na]
+} else if (('Year' %in% names(dataset)) && ('Study' %in% names(dataset))){
+  study_names <- paste0(dataset$Study,', ', dataset$Year)[res$not.na]
 } else {study_names <- dataset[,1]}
 measure <- exp(res$yi)
 participants <- attr(res$yi, 'ni')
