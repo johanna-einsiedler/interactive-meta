@@ -6,7 +6,7 @@ library(dplyr)
 library(stringr)
 
 # FUNCTION TO FILTER DATAFRAME ACCORDING TO FILTER INPUT
-filter_data <- function(dataset, input){
+filter_data <- function(dataset, inputs){
   
   # remove [] at beginning and end
   #input <- substring(input,2,nchar(input)-1)
