@@ -4,7 +4,19 @@ library(hash)
 library(jsonlite)
 library(dplyr)
 library(netmeta)
-source('utils.R')
+#source('utils.R')
+get_this_file <- function() {
+  commandArgs() %>%
+    tibble::enframe(name = NULL) %>%
+    tidyr::separate(
+      col = value, into = c("key", "value"), sep = "=", fill = "right"
+    ) %>%
+    dplyr::filter(key == "--file") %>%
+    dplyr::pull(value)
+}
+this_file <- get_this_file()
+#source(paste0(strsplit(this_file,'/')[[1]][1],'/api_calculation/utils.R'))
+
 
 
 # dat.aloe2013
@@ -12,7 +24,6 @@ f.aloe2013 <- function(dataset){
   
   ### compute the partial correlation coefficients and corresponding sampling variances
   dat <- escalc(measure="PCOR", ti=tval, ni=n, mi=preds, data=dataset)
-  
   res <-rma(yi, vi, data=dat)
   return(res)
 }
@@ -199,4 +210,18 @@ f.mcdaniel1994 <- function(dataset){
     ### meta-analysis of the transformed correlations using a random-effects model
   res <- rma(yi, vi, data=dat)
   return(res)
+}
+
+f.kearon1998 <- function(dat){
+  ### calculate diagnostic log odds ratios and corresponding sampling variances
+  dat <- escalc(measure="OR", ai=tp, n1i=np, ci=nn-tn, n2i=nn, data=dat, add=1/2, to="all")
+  ### fit random-effects model for the symptomatic patients
+  res <- rma(yi, vi, data=dat)
+  return(res)
+}
+
+f.baskerville2012 <- function(dat){
+  res <- rma(smd, sei=se, data=dat, method="DL")
+  return(res)
+  
 }
