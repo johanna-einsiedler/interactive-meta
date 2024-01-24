@@ -57,6 +57,9 @@ if(('year' %in% names(dataset)) && ('study' %in% names(dataset))){
 } else {study_names <- dataset[,1]}
 measure <- exp(res$yi)
 participants <- attr(res$yi, 'ni')
+if (length(participants)!=length(measure)){
+  participants <- participants[dataset$id]
+}
 ci_lower <- exp(res$yi -sqrt(res$vi)* qt(0.975, df = participants-1))
 ci_upper <- exp(res$yi +sqrt(res$vi)* qt(0.975, df = participants-1))
 
