@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 
 from IPython.display import JSON, clear_output, display
-from rank_bm25 import BM25Okapi
+#from rank_bm25 import BM25Okapi
 from tqdm import tqdm
 
 from rag.config import EFS_DIR, ROOT_DIR
@@ -108,12 +108,13 @@ class QueryAgent:
                 model_name=embedding_model_name,
                 api_key=os.environ["OPENAI_API_KEY"] 
             )
+        
         collection = client.get_or_create_collection(
         name=self.collection_name,
         metadata={"hnsw:space": "cosine"} ,
         embedding_function= openai_ef
     )
-
+        print(collection)
         context_results = collection.query(
     query_texts=[query],
     n_results=num_chunks,

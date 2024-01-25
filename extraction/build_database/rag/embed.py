@@ -1,5 +1,5 @@
 import os
-
+import rag
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 

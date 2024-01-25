@@ -5,7 +5,19 @@ library(jsonlite)
 library(dplyr)
 #print(getwd())
 
-source('utils.R')
+get_this_file <- function() {
+  commandArgs() %>%
+    tibble::enframe(name = NULL) %>%
+    tidyr::separate(
+      col = value, into = c("key", "value"), sep = "=", fill = "right"
+    ) %>%
+    dplyr::filter(key == "--file") %>%
+    dplyr::pull(value)
+}
+this_file <- get_this_file()
+#source('utils.R')
+source(paste0(strsplit(this_file,'/')[[1]][1],'/calculation_scripts/utils.R'))
+
 source('meta_analysis.R')
 
 myArgs <- commandArgs(trailingOnly = TRUE)

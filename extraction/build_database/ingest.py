@@ -1,4 +1,5 @@
 from pathlib import Path
+import rag
 from rag.config import ROOT_DIR, EFS_DIR, DOCS_DIR, MAX_CONTEXT_LENGTHS
 from rag.embed import add_to_collection
 import matplotlib.pyplot as plt
@@ -40,7 +41,6 @@ openai_ef = embedding_functions.OpenAIEmbeddingFunction(
                 model_name=embedding_model_name,
                 api_key=os.environ["OPENAI_API_KEY"] 
             )
-
 # get collection
 collection = client.get_or_create_collection(
         name="paper_collection",

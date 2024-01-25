@@ -37,6 +37,7 @@ def execute_bash(command):
     return results
 
 
+
 def predict(inputs, preprocess_fnc, tokenizer, model, label_encoder, device="cpu", threshold=0.0):
     # Get probabilities
     model.eval()

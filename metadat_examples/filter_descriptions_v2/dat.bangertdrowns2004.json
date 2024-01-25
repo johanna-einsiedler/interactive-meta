@@ -70,7 +70,7 @@
       "author"
     ],
     "description": [
-      "study author(s)"
+      "Study author(s)"
     ],
     "display_name": [],
     "type": [
@@ -253,7 +253,7 @@
       "wic"
     ],
     "description": [
-      "writing tasks were completed in class"
+      "Location of writing task completion"
     ],
     "display_name": [],
     "type": [
@@ -264,7 +264,7 @@
       "0",
       "NA"
     ],
-    "display_values": ["No","Yes","Unknown"],
+    "display_values": ["Outside Class","Inside Class","Unknown"],
     "display": [
       "true"
     ]
@@ -274,7 +274,7 @@
       "feedback"
     ],
     "description": [
-      "feedback on writing was provided"
+      "Writing Feedback"
     ],
     "display_name": [],
     "type": [

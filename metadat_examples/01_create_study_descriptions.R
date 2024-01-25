@@ -1,5 +1,7 @@
 library(stringr)
 library(brio)
+library(metadat)
+library(brio)
 
 help_text <- function(...) {
   file <- help(...)
@@ -36,25 +38,26 @@ extract_study_info <- function(study){
   
   # DESCRIPTION
   description <- metadata[(description_index+2):(usage_index-2)]
-  description <- paste(trimws(description),collapse='')
+  description <- paste(trimws(description),collapse=' ')
   
   # DETAILS
   details <- metadata[(details_index+2):(concepts_index-2)]
-  details <- paste(trimws(details),collapse='')
+  details <- paste(trimws(details),collapse=' ')
   
   # CONCEPTS
   if(length(note_index)==0){
+    note <- ''
     concepts <-   concepts <- metadata[(concepts_index+2):(author_index-2)]
   } else{
   concepts <- metadata[(concepts_index+2):(note_index-2)]
   }
-  concepts <- paste(trimws(concepts),collapse='')
+  concepts <- paste(trimws(concepts),collapse=' ')
   concepts <- str_split(concepts,',')[[1]]
   
   # NOTE
   if(length(note_index)!=0){
   note <- metadata[(note_index+2):(author_index-2)]
-  note <- paste(trimws(note),collapse='')
+  note <- paste(trimws(note),collapse=' ')
   }
   
   # SOURCE + REFS
@@ -64,9 +67,9 @@ extract_study_info <- function(study){
   else {
   source <- metadata[(source_index+2):(refs_index-2)]
   refs <- metadata[(refs_index + 2): (ex_index-2)]
-  refs <- paste(trimws(refs),collapse='')
+  refs <- paste(trimws(refs),collapse=' ')
   }
-  source <- paste(trimws(source),collapse='')
+  source <- paste(trimws(source),collapse=' ')
   
  # create return data
   variable <- toJSON(list(id = study,  
@@ -189,7 +192,7 @@ for (study in names(df_studies)){
   study <- trimws(study)
   print(study)
   output <- extract_study_info(study)
-  write_file(output,paste0('/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/study_descriptions/',study,'.txt'))
+  write_file(output,paste0('/Users/htr365/Documents/Side_Projects/09_founding_lab/semester_project/meta-studies/metadat_examples/api_study_descriptions/study_descriptions/',study,'.txt'))
   
 }
 
