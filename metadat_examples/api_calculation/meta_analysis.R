@@ -4,19 +4,16 @@ library(hash)
 library(jsonlite)
 library(dplyr)
 library(netmeta)
-#source('utils.R')
-get_this_file <- function() {
-  commandArgs() %>%
-    tibble::enframe(name = NULL) %>%
-    tidyr::separate(
-      col = value, into = c("key", "value"), sep = "=", fill = "right"
-    ) %>%
-    dplyr::filter(key == "--file") %>%
-    dplyr::pull(value)
-}
-this_file <- get_this_file()
-#source(paste0(strsplit(this_file,'/')[[1]][1],'/api_calculation/utils.R'))
 
+
+initial.options <- commandArgs(trailingOnly = FALSE)
+file.arg.name <- "--file="
+script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
+script.basename <- dirname(script.name)
+utils.name <- file.path(script.basename, "utils.R")
+meta_analysis.name  <- file.path(script.basename, "meta_analysis.R")
+
+source(paste0(strsplit(this_file,'/')[[1]][1],'/api_calculation/utils.R'))
 
 
 # dat.aloe2013
@@ -149,7 +146,7 @@ f.hannum2020 <- function(dataset){
 f.hartmannboyce2018 <- function(dataset){
   ### turn treatment into a factor with the desired ordering
   dataset$treatment <- factor(dataset$treatment, levels=unique(dataset$treatment))
-  res <- rma.mh(measure="RR", ai=x.nrt,  n1i=n.nrt,
+  res <- rma.mh(measure="OR", ai=x.nrt,  n1i=n.nrt,
                 ci=x.ctrl, n2i=n.ctrl, data=dataset, digits=2)
   return(res)
 }

@@ -76,7 +76,6 @@ out <- out %>% mutate(across(where(is.numeric), \(x) round(x,digits=2)))
 
 out_json <- toJSON(out,pretty=TRUE)
 
-
 # gather study information
 meta_info <- c(measure = unname(res$measure[[1]]),
      call = paste0(trimws(deparse(res$call)),collapse=''),
